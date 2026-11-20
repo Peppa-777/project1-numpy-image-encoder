@@ -20,12 +20,13 @@ class MultiHeadAttention:
     def split_heads(self, x):
         """TODO-02. Input [B,N,D], return [B,H,N,D/H].
 
-        In this image model D=768, H=12 and D/H=64. Use reshape/transpose.
-        Research the head organization independently. Preserve token order.
+        In this image model D=768, H=12 and D/H=64. The feature axis is split
+        into (H, D/H) and the head axis moves in front of the token axis, so
+        every head keeps its own token order.
         """
-        # TODO-02 contract: [B,N,D] to [B,H,N,D/H].
-        # Image model: D=768, H=12, D/H=64.
-        raise NotImplementedError('TODO-02: split the feature axis into heads')
+        batch, tokens, width = x.shape
+        grouped = x.reshape(batch, tokens, self.heads, self.head_dim)
+        return grouped.transpose(0, 2, 1, 3)
 
     def __call__(self, x, causal=False):
         # Given: stored linear weights use [out,in]. Parameters stay fixed.
@@ -36,7 +37,10 @@ class MultiHeadAttention:
 
         # TODO-03a: query/key comparisons, scaled by sqrt(head_dim).
         # q,k,v: [B,H,N,64]. scores must have [B,H,N,N].
-        raise NotImplementedError('TODO-03a: calculate scores from q and k')
+        # Real k is 4D, so only the last two axes are exchanged: the batch and
+        # head groups stay exactly where they are.
+        scale = np.sqrt(np.float32(self.head_dim))
+        scores = (q @ np.swapaxes(k, -1, -2)) / scale
 
         # Given for later text-encoder compatibility. Images use causal=False.
         if causal:
@@ -45,11 +49,13 @@ class MultiHeadAttention:
 
         # TODO-03b: mix value rows using coefficients; then join head outputs.
         # context: [B,H,N,64], merged: [B,N,D].
-        raise NotImplementedError('TODO-03b: weighted values and merged heads')
+        context = coefficients @ v
+        merged = context.transpose(0, 2, 1, 3).reshape(
+            context.shape[0], context.shape[2], self.width)
 
         # TODO-03c: output projection, using out_weight and out_bias.
         # Return [B,N,D]. Remember the stored linear-weight orientation.
-        raise NotImplementedError('TODO-03c: project merged attention outputs')
+        return merged @ self.out_weight.T + self.out_bias
 
 
 class TransformerBlock:
