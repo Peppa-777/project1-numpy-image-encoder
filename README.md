@@ -41,7 +41,7 @@
 
 - Python **3.9+**；无需 GPU、PyTorch、OpenCLIP 或联网。
 - 依赖见 `requirements.txt`：`numpy>=1.24,<3`、`Pillow>=9.2,<13`。
-- 本仓库验证环境：Windows 11 + Python 3.13 + NumPy 2.3.5 + Pillow 12.3.0，float32。
+- 本仓库验证环境：Windows 11 + Python 3.12 + NumPy 2.3.5 + Pillow 12.3.0，float32。
 
 ```bash
 python -m venv .venv
