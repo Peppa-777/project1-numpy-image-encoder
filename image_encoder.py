@@ -1,7 +1,8 @@
 """Student implementation of the final project's image encoder.
 
-Complete TODO-01 through TODO-06 using NumPy. Model parameters are supplied.
-The public classes retain the final project's interface. helpers.py is provided.
+All six TODO groups are completed with NumPy array operations only. Model
+parameters are supplied; no learning happens here. The public classes retain
+the final project's interface, and helpers.py stays untouched.
 """
 import numpy as np
 from helpers import LayerNorm, GELU, attention_weights, causal_mask, unit_vector
@@ -139,6 +140,8 @@ class ImageEncoder:
         # Select CLS, apply post_norm, and project with self.projection.
         # [B,50,768] -> [B,768] -> [B,512]. visual.proj is already [in,out].
         # Name the projected array output. The final unit-vector helper is given.
-        raise NotImplementedError('TODO-06: CLS selection, post-Norm and projection')
+        cls_token = tokens[:, 0, :]
+        normalized = self.post_norm(cls_token)
+        output = normalized @ self.projection
 
         return unit_vector(output)
