@@ -1,0 +1,21 @@
+# 课程提供的大体积文件：按 README「数据与权重」一节从课程附件复制，不能提交到仓库。
+# weights/image_encoder.npz 约 326 MB（GitHub 单文件上限 100 MB，且课程要求不重复提交）
+# assets/reference_outputs.npz 约 7.6 MB（课程参考输出，仅用于本地校验）
+weights/*.npz
+assets/reference_outputs.npz
+
+# 运行产物
+output_tokens.npz
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

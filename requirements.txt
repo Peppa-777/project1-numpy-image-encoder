@@ -1,0 +1,4 @@
+# 运行本仓库只需要 NumPy 与 Pillow；不需要 GPU、PyTorch 或 OpenCLIP 包。
+# Python 3.9+
+numpy>=1.24,<3
+Pillow>=9.2,<13
